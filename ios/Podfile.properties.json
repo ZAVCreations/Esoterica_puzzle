@@ -1,0 +1,8 @@
+{
+  "expo.flipper": false,
+  "expo.jsEngine": "jsc",
+  "ios.deploymentTarget": "13.0",
+  "ios.useFrameworks": "static",
+  "newArchEnabled": false,
+  "EX_DEV_CLIENT_NETWORK_INSPECTOR": false
+}
