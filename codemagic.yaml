@@ -9,13 +9,23 @@ workflows:
         CM_KEY_ALIAS: $CM_KEY_ALIAS
         CM_KEY_PASSWORD: $CM_KEY_PASSWORD
     scripts:
+      - name: Check CM_KEYSTORE
+        script: |
+          if [ -z "$CM_KEYSTORE" ]; then
+            echo "❌ CM_KEYSTORE is EMPTY!"
+            exit 1
+          else
+            echo "✅ CM_KEYSTORE is PRESENT"
+            echo "${#CM_KEYSTORE} characters loaded"
+          fi
+
       - name: Decode keystore
         script: |
-          echo $CM_KEYSTORE | base64 --decode > keystore.jks
+          echo "$CM_KEYSTORE" | base64 --decode > keystore.jks
 
       - name: Install dependencies
         script: |
-          yarn install
+          npm install
 
       - name: Build APK
         script: |
