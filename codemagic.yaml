@@ -9,7 +9,7 @@ workflows:
 
       - name: Install dependencies
         script: |
-          yarn install
+          npm install
 
       - name: Build APK
         script: |
