@@ -1,0 +1,40 @@
+workflows:
+  android-release:
+    name: Android Signed Build
+    max_build_duration: 45
+    environment:
+      vars:
+        CM_KEYSTORE: Encrypted(...)
+        CM_KEYSTORE_PASSWORD: Encrypted(...)
+        CM_KEY_ALIAS: Encrypted(...)
+        CM_KEY_PASSWORD: Encrypted(...)
+    scripts:
+      - name: Decode keystore
+        script: |
+          echo $CM_KEYSTORE | base64 --decode > keystore.jks
+
+      - name: Install dependencies
+        script: |
+          yarn install
+
+      - name: Build APK
+        script: |
+          cd android
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=../keystore.jks \
+            -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD \
+            -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS \
+            -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
+
+      - name: Build AAB
+        script: |
+          cd android
+          ./gradlew bundleRelease \
+            -Pandroid.injected.signing.store.file=../keystore.jks \
+            -Pandroid.injected.signing.store.password=$CM_KEYSTORE_PASSWORD \
+            -Pandroid.injected.signing.key.alias=$CM_KEY_ALIAS \
+            -Pandroid.injected.signing.key.password=$CM_KEY_PASSWORD
+
+    artifacts:
+      - android/app/build/outputs/apk/release/*.apk
+      - android/app/build/outputs/bundle/release/*.aab
